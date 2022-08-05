@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import PostsList from "./PostsList";
 import AddPost from "./AddPost";
 import UserContext from "../../store/UserContext";

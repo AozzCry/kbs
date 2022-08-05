@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 
 import Post from "./Post";
 import PostsContext from "../../store/PostsContext";

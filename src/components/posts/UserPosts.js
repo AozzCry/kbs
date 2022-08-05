@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import userContext from "../../store/UserContext";
 import noPostsImg from "../../assets/imgs/noPosts.png";
