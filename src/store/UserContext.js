@@ -12,13 +12,14 @@ import useHttp from "../hooks/useHttp";
 const UserContext = createContext({
   userData: {},
   setUserData: () => {},
-  userPosts: [],
-  setUserPosts: () => {},
   theme: localStorage.theme,
   setTheme: () => {},
+  token: "",
 });
 
 export const UserContextProvider = (props) => {
+  const [theme, setTheme] = useState(localStorage.theme);
+  const [token, setToken] = useState("");
   const cookies = useMemo(() => new Cookies(), []);
 
   const { sendRequest: userDataRequest } = useHttp();
@@ -38,9 +39,6 @@ export const UserContextProvider = (props) => {
     token: null,
   });
 
-  const [userPosts, setUserPosts] = useState([]);
-  const [theme, setTheme] = useState(localStorage.theme);
-
   const getUserData = useCallback(async () => {
     const userData = await userDataRequest({
       url: "/api/user",
@@ -50,7 +48,7 @@ export const UserContextProvider = (props) => {
         Authorization: `Bearer ${cookies.get("token")}`,
       },
     });
-
+    setToken(cookies.get("token"));
     setUserData({ user: userData.data, token: cookies.get("token") });
   }, [userDataRequest, cookies]);
 
@@ -71,10 +69,9 @@ export const UserContextProvider = (props) => {
       value={{
         userData,
         setUserData,
-        userPosts,
-        setUserPosts,
         theme,
         setTheme,
+        token,
       }}
     >
       {props.children}

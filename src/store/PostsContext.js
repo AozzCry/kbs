@@ -1,27 +1,54 @@
-import React, { createContext, useState, useCallback } from "react";
+import React, { createContext, useState, useCallback, useReducer } from "react";
 
 import useHttp from "../hooks/useHttp";
 
 const PostsContext = createContext({
   posts: [],
-  setPosts: () => { },
+  dispatchPosts: () => {},
   userPosts: [],
-  setUserPosts: () => { },
-  getPosts: () => { },
-  searchPosts: () => { },
+  setUserPosts: () => {},
+  getPosts: () => {},
+  searchPosts: () => {},
   postsIsLoading: null,
   postsError: null,
 });
 
 export const POST_ACTIONS = {
+  LOAD_POSTS: "load-posts",
   ADD_POST: "add-post",
   DELETE_POST: "delete-post",
   UPDATE_POSTS: "update-posts",
   UPDATE_POST_COMMENT: "update-post-comment",
 };
 
+const postsReducer = (posts, action) => {
+  switch (action.type) {
+    case POST_ACTIONS.LOAD_POSTS:
+      return [...action.payload.posts];
+
+    case POST_ACTIONS.ADD_POST:
+      return [action.payload.newPost, ...posts];
+
+    case POST_ACTIONS.DELETE_POST:
+      return;
+
+    case POST_ACTIONS.UPDATE_POSTS:
+      const updatedPosts = [...posts];
+      updatedPosts.splice(action.payload.postIndex, 1, action.payload.comment);
+      return updatedPosts;
+
+    case POST_ACTIONS.UPDATE_POST_COMMENT:
+      const newPosts = [...posts];
+      newPosts[action.payload.index].comments = action.payload.comments;
+      return newPosts;
+
+    default:
+      return posts;
+  }
+};
+
 export const PostsContextProvider = (props) => {
-  const [posts, setPosts] = useState([]);
+  const [posts, dispatchPosts] = useReducer(postsReducer, []);
   const [userPosts, setUserPosts] = useState([]);
 
   const {
@@ -34,8 +61,7 @@ export const PostsContextProvider = (props) => {
 
   const getPosts = useCallback(async () => {
     const posts = await postsRequest({ url: "/api/posts" });
-
-    setPosts(posts);
+    dispatchPosts({ type: POST_ACTIONS.LOAD_POSTS, payload: { posts } });
   }, [postsRequest]);
 
   const getUserPosts = useCallback(
@@ -51,11 +77,11 @@ export const PostsContextProvider = (props) => {
 
   const searchPosts = useCallback(
     async (inputValue) => {
-      const searchedPosts = await postsRequest({
-        url: `/api/posts/tag/${inputValue}`
+      const posts = await postsRequest({
+        url: `/api/posts/tag/${inputValue}`,
       });
 
-      setPosts(searchedPosts);
+      dispatchPosts({ type: POST_ACTIONS.LOAD_POSTS, payload: { posts } });
     },
     [postsRequest]
   );
@@ -64,7 +90,6 @@ export const PostsContextProvider = (props) => {
     <PostsContext.Provider
       value={{
         posts,
-        setPosts,
         userPosts,
         setUserPosts,
         getPosts,
@@ -72,6 +97,7 @@ export const PostsContextProvider = (props) => {
         searchPosts,
         postsError,
         postsIsLoading,
+        dispatchPosts,
       }}
     >
       {props.children}

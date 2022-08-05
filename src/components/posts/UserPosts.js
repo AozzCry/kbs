@@ -7,7 +7,7 @@ import PostsContext from "../../store/PostsContext";
 
 const UserPosts = () => {
   const userCtx = useContext(userContext);
-  const { token } = userCtx.userData;
+  const { token } = userCtx;
   const { id } = userCtx.userData.user;
 
   const postsCtx = useContext(PostsContext);

@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import UserContext from "../store/UserContext";
 
 const Nav = () => {
-  const ctx = useContext(UserContext);
-  const { token } = ctx.userData;
+  const userContext = useContext(UserContext);
+  const { token } = userContext;
+
   return (
     <>
       <ul className="z-10 fixed bottom-0 left-0 justify-around menu w-full lg:menu menu-horizontal bg-base-300 md:justify-around lg:rounded-box shadow-lg lg:static lg:mt-2">
