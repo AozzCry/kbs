@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback, useReducer } from "react";
+import { createContext, useState, useCallback, useReducer } from "react";
 
 import useHttp from "../hooks/useHttp";
 
@@ -11,6 +11,8 @@ const PostsContext = createContext({
   searchPosts: () => {},
   postsIsLoading: null,
   postsError: null,
+  userPostsError: null,
+  userPostsLoading: null,
 });
 
 export const POST_ACTIONS = {
@@ -28,9 +30,6 @@ const postsReducer = (posts, action) => {
 
     case POST_ACTIONS.ADD_POST:
       return [action.payload.newPost, ...posts];
-
-    case POST_ACTIONS.DELETE_POST:
-      return;
 
     case POST_ACTIONS.UPDATE_POSTS:
       const updatedPosts = [...posts];
@@ -57,7 +56,11 @@ export const PostsContextProvider = (props) => {
     sendRequest: postsRequest,
   } = useHttp();
 
-  const { sendRequest: userPostsRequest } = useHttp();
+  const {
+    error: userPostsError,
+    isLoading: userPostsLoading,
+    sendRequest: userPostsRequest,
+  } = useHttp();
 
   const getPosts = useCallback(async () => {
     const posts = await postsRequest({ url: "/api/posts" });
@@ -98,6 +101,8 @@ export const PostsContextProvider = (props) => {
         postsError,
         postsIsLoading,
         dispatchPosts,
+        userPostsError,
+        userPostsLoading,
       }}
     >
       {props.children}

@@ -20,7 +20,12 @@ const PostsContainer = () => {
 
   if (postsError) return <p>Error</p>;
 
-  if (postsIsLoading) return <CirclesWithBar color="#5014B8" />;
+  if (postsIsLoading)
+    return (
+      <div className="flex justify-center items-center">
+        <CirclesWithBar color="#5014B8" />
+      </div>
+    );
 
   return (
     <>
