@@ -1,17 +1,19 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import userContext from "../../store/UserContext";
 import noPostsImg from "../../assets/imgs/noPosts.png";
 import Post from "./Post";
 import PostsContext from "../../store/PostsContext";
+import { CirclesWithBar } from "react-loader-spinner";
 
 const UserPosts = () => {
   const userCtx = useContext(userContext);
-  const { token } = userCtx.userData;
+  const { token } = userCtx;
   const { id } = userCtx.userData.user;
 
   const postsCtx = useContext(PostsContext);
-  const { getUserPosts, userPosts } = postsCtx;
+  const { getUserPosts, userPosts, userPostsError, userPostsLoading } =
+    postsCtx;
 
   let classes = token
     ? "md:overflow-y-scroll scrollbar-hide md:overflow-hidden"
@@ -29,6 +31,20 @@ const UserPosts = () => {
   useEffect(() => {
     if (token) getUserPosts(id);
   }, [id, token, getUserPosts]);
+
+  if (userPostsError) return <p>Error</p>;
+
+  if (userPostsLoading)
+    return (
+      <div className="flex justify-center items-center">
+        <CirclesWithBar color="#5014B8" />
+      </div>
+    );
+
+  if (loadedPosts.length === 0)
+    return (
+      <p className="flex justify-center items-center">U don't have posts!</p>
+    );
 
   return <div className={classes}>{loadedPosts}</div>;
 };

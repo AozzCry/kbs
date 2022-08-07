@@ -1,42 +1,35 @@
-import React, { useState, useContext } from "react";
-import API from "../../env";
+import { useState, useContext } from "react";
 import UserContext from "../../store/UserContext";
-import PostsContext from "../../store/PostsContext";
+import PostsContext, { POST_ACTIONS } from "../../store/PostsContext";
+import useHttp from "../../hooks/useHttp";
 
 const AddComment = ({ id, postIndex }) => {
-  const userContext = useContext(UserContext);
-
-  const postsContext = useContext(PostsContext);
+  const { token } = useContext(UserContext);
+  const { dispatchPosts } = useContext(PostsContext);
 
   const [commentText, setCommentText] = useState("");
+  const { sendRequest: addCommentRequest } = useHttp();
 
   const addCommentHandler = async (e) => {
     e.preventDefault();
 
-    try {
-      const resp = await fetch(`${API}/api/posts/${id}/comments/add`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${userContext.userData.token}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          postId: id,
-          body: commentText,
-        }),
-      });
+    const comment = await addCommentRequest({
+      url: `/api/posts/${id}/comments/add`,
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: { postId: id, body: commentText },
+    });
 
-      const newComment = await resp.json();
-      const updatedComments = [...postsContext.posts];
-      updatedComments.splice(postIndex, 1, newComment);
+    dispatchPosts({
+      type: POST_ACTIONS.UPDATE_POSTS,
+      payload: { postIndex, comment },
+    });
 
-      postsContext.setPosts(updatedComments);
-
-      setCommentText("");
-    } catch (e) {
-      console.error(e);
-    }
+    setCommentText("");
   };
 
   return (

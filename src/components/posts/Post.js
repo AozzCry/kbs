@@ -1,14 +1,18 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import Tag from "../../ui/Tag";
 import PostComment from "./PostComment";
 import AddComment from "./AddComment";
 import API from "../../env";
 import UserContext from "../../store/UserContext";
-import PostsContext from "../../store/PostsContext";
+import PostsContext, { POST_ACTIONS } from "../../store/PostsContext";
+import useHttp from "../../hooks/useHttp";
 
 const Post = ({ post, index, userPost }) => {
-  const userContext = useContext(UserContext);
+  const { token } = useContext(UserContext);
   const postsContext = useContext(PostsContext);
+  const { dispatchPosts, setUserPosts } = postsContext;
+  const { sendRequest: moreCommentsRequest } = useHttp();
+  const { sendRequest: deletePostRequest } = useHttp();
 
   const tags = post.tags.map((tag, index) => <Tag name={tag} key={index} />);
 
@@ -25,41 +29,35 @@ const Post = ({ post, index, userPost }) => {
     ) : null;
 
   const loadMoreCommentsHandler = async () => {
-    const resp = await fetch(`${API}/api/posts/${post.id}/comments`, {
+    const { comments } = await moreCommentsRequest({
+      url: `/api/posts/${post.id}/comments`,
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({
-        postId: post.id,
-      }),
+      body: { postId: post.id },
     });
-    const { comments } = await resp.json();
 
-    const postUpdated = [...postsContext.posts];
-    postUpdated[index].comments = comments;
-
-    postsContext.setPosts(postUpdated);
+    dispatchPosts({
+      type: POST_ACTIONS.UPDATE_POST_COMMENT,
+      payload: { index, comments },
+    });
   };
 
   const deletePostHandler = async (postId) => {
-    await fetch(`${API}/api/posts/${postId}/delete`, {
+    await deletePostRequest({
+      url: `/api/posts/${postId}/delete`,
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${userContext.userData.token}`,
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        postId,
-      }),
+      body: { postId },
     });
 
-    const userPosts = [...postsContext.userPosts].filter(
-      (post) => post.id !== postId
-    );
-    postsContext.setUserPosts(userPosts);
+    setUserPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
   };
 
   return (
@@ -105,9 +103,7 @@ const Post = ({ post, index, userPost }) => {
         <p className="text-m">{post.body}</p>
       </div>
       {displayComments}
-      {userContext.userData.token && (
-        <AddComment id={post.id} postIndex={index} />
-      )}
+      {token && <AddComment id={post.id} postIndex={index} />}
       {displayComments && (
         <button className="btn btn-primary" onClick={loadMoreCommentsHandler}>
           Load more comments

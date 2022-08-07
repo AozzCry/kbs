@@ -1,15 +1,16 @@
-import React, { useContext } from "react";
-import API from "../env";
-import PostsContext from "../store/PostsContext";
+import { useContext } from "react";
+import PostsContext, { POST_ACTIONS } from "../store/PostsContext";
+import useHttp from "./useHttp";
 
 const useSortPostsByTag = (tagValue) => {
   const postsContext = useContext(PostsContext);
+  const { dispatchPosts } = postsContext;
 
+  const { sendRequest: tagsPostsRequest } = useHttp();
   return async () => {
-    const response = await fetch(`${API}/api/posts/tag/${tagValue}`);
-    const data = await response.json();
+    const posts = await tagsPostsRequest({ url: `/api/posts/tag/${tagValue}` });
 
-    postsContext.setPosts(data);
+    dispatchPosts({ type: POST_ACTIONS.LOAD_POSTS, payload: { posts } });
   };
 };
 

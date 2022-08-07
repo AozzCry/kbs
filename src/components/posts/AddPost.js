@@ -1,20 +1,19 @@
-import React, { useContext, useState } from "react";
-import Cookies from "universal-cookie";
-
-import UserContext from "../../store/UserContext";
-import API from "../../env";
+import { useContext, useState } from "react";
 
 import Checkbox from "../../ui/Checkbox";
-import PostsContext from "../../store/PostsContext";
+import PostsContext, { POST_ACTIONS } from "../../store/PostsContext";
+import UserContext from "../../store/UserContext";
+import useHttp from "../../hooks/useHttp";
 
 const AddPost = () => {
-  const userContext = useContext(UserContext);
-  const postsContext = useContext(PostsContext);
-
-  const cookies = new Cookies();
-
   const [postInput, setPostInput] = useState("");
   const [tags, setTags] = useState([]);
+  const { sendRequest: addPostRequest } = useHttp();
+
+  const postsContext = useContext(PostsContext);
+  const { dispatchPosts } = postsContext;
+
+  const { token } = useContext(UserContext);
 
   const addTagHandler = (e) => {
     const newTags = [...tags];
@@ -31,23 +30,18 @@ const AddPost = () => {
   const addPostHandler = async (e) => {
     e.preventDefault();
 
-    const resp = await fetch(`${API}/api/posts/add`, {
+    const newPost = await addPostRequest({
+      url: "/api/posts/add",
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Bearer ${cookies.get("token")}`,
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        body: postInput,
-        tags,
-      }),
+      body: { body: postInput, tags },
     });
 
-    const newPost = await resp.json();
-
-    postsContext.setPosts((prevPosts) => [newPost, ...prevPosts]);
-
+    dispatchPosts({ type: POST_ACTIONS.ADD_POST, payload: { newPost } });
     setPostInput("");
   };
 
@@ -58,8 +52,7 @@ const AddPost = () => {
           <div className="input-group max-h-16">
             <textarea
               placeholder="Post me!"
-              className="textarea w-full"
-              style={{ resize: "none" }}
+              className="textarea w-full resize-none"
               onChange={(e) => setPostInput(e.target.value)}
               value={postInput}
             />

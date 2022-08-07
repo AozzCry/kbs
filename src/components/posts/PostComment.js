@@ -1,4 +1,3 @@
-import React from "react";
 import API from "../../env";
 
 const PostComment = ({ comment }) => {
