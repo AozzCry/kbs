@@ -7,7 +7,8 @@ import Friend from "./Friend";
 
 const Friends = () => {
   const [inputValue, setInputValue] = useState("");
-  const [messages, sendMessage, getMessages, setConnection] = useChat();
+  const [messages, sendMessage, getMessages, connection, setConnection] =
+    useChat();
   const [isLoaded, setIsLoaded] = useState(false);
 
   const userCtx = useContext(UserContext);
@@ -16,13 +17,15 @@ const Friends = () => {
   const { token } = userCtx.userData;
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const { getFriends } = friendsCtx;
-      getFriends(token);
-      getMessages();
-    }, 1000);
-    return () => clearInterval(interval);
+    friendsCtx.getFriends(token);
   }, [token]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getMessages();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [connection]);
 
   useEffect(() => {
     setIsLoaded(true);

@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 const Friend = ({ friend, userId, userEmail, setConnection }) => {
   let connectionString;
-
   if (friend.email && userEmail) {
     if (userId > friend.id) {
       connectionString = `${friend.email

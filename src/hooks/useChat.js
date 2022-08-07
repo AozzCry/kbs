@@ -9,7 +9,9 @@ const useChat = () => {
       `https://kbchat-308b7-default-rtdb.europe-west1.firebasedatabase.app/${connection}.json`
     );
     const data = await response.json();
-    setMessages(Object.entries(data));
+    if (messages !== Object.entries(data)) {
+      setMessages(Object.entries(data));
+    }
   };
 
   const sendMessage = async (user, message, id) => {
@@ -35,7 +37,7 @@ const useChat = () => {
     }
   };
 
-  return [messages, sendMessage, getMessages, setConnection];
+  return [messages, sendMessage, getMessages, connection, setConnection];
 };
 
 export default useChat;
