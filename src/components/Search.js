@@ -25,7 +25,7 @@ const Search = () => {
   };
 
   return (
-    <div className="card w-full bg-base-300 p-4 shadow-lg">
+    <div className="w-full bg-base-300 p-4 shadow-lg">
       <div className="form-control">
         <div className="input-group">
           <form onSubmit={searchHandler}>

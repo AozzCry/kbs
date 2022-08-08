@@ -18,11 +18,11 @@ import Friends from "../components/friends/Friends";
 import Users from "../components/users/Users";
 import StrangerInfo from "./StrangerInfo";
 import Messenger from "./Messenger";
+import FollowedPosts from "./FollowedPosts";
 
 import { PostsContextProvider } from "../store/PostsContext";
 import { StrangersContextProvider } from "../store/StrangersContext";
 import { FriendsContextProvider } from "../store/FriendsContext";
-import FollowedPosts from "./FollowedPosts";
 
 const Dashboard = () => {
   const userCtx = useContext(UserContext);
@@ -65,7 +65,7 @@ const Dashboard = () => {
               {strangersCtx.strangers && <Users />}
             </StrangersContextProvider>
             <hr />
-            fłiends
+            Friends
             {token && friendsCtx && <Friends />}
           </div>
           <div className="divider lg:divider-horizontal p-2"></div>
@@ -76,6 +76,8 @@ const Dashboard = () => {
               <Route path="/usersettings" element={<UserCard />} />
               <Route path="/myposts" element={<UserPosts />} />
               <Route path="/strangerinfo" element={<StrangerInfo />} />
+              <Route path="/messenger" element={<Messenger />} />
+              <Route path="/followedposts" element={<FollowedPosts />} />
             </Routes>
           </div>
         </FriendsContextProvider>

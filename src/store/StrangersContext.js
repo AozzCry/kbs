@@ -4,8 +4,8 @@ import useHttp from "../hooks/useHttp";
 
 const StrangersContext = createContext({
   strangers: [],
-  setStrangers: () => { },
-  getStrangers: () => { },
+  setStrangers: () => {},
+  getStrangers: () => {},
   strangersIsLoading: null,
   strangersError: null,
 });
@@ -19,16 +19,18 @@ export const StrangersContextProvider = (props) => {
     sendRequest: strangersRequest,
   } = useHttp();
 
-  const getStrangers = useCallback(async (inputValue) => {
-    const strangers = await strangersRequest({
-      url: "/api/users/search",
-      method: "POST",
-      body: { str: inputValue },
-    });
-    setStrangers(strangers);
-    if (!strangers)
-      setStrangers([]);
-  }, [strangersRequest]);
+  const getStrangers = useCallback(
+    async (inputValue) => {
+      const strangers = await strangersRequest({
+        url: "/api/users/search",
+        method: "POST",
+        body: { str: inputValue },
+      });
+      setStrangers(strangers);
+      if (!strangers) setStrangers([]);
+    },
+    [strangersRequest]
+  );
 
   return (
     <StrangersContext.Provider

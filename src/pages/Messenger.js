@@ -15,19 +15,20 @@ const Friends = () => {
 
   const userCtx = useContext(UserContext);
   const friendsCtx = useContext(FriendsContext);
+  const { getFriends } = friendsCtx;
   const messagesBoxRef = useRef(null);
   const { token } = userCtx.userData;
 
   useEffect(() => {
-    friendsCtx.getFriends(token);
-  }, [token]);
+    getFriends(token);
+  }, [token, getFriends]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       getMessages();
     }, 2000);
     return () => clearInterval(interval);
-  }, [friendsCtx.connection]);
+  }, [friendsCtx.connection, getMessages]);
 
   useEffect(() => {
     getMessages();

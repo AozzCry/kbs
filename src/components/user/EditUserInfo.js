@@ -4,7 +4,6 @@ import API from "../../env";
 import UserContext from "../../store/UserContext";
 import TagInput from "../../ui/TagInput";
 import Avatar from "./Avatar";
-import Album from "./Album";
 
 const EditUserInfo = () => {
   const ctx = useContext(UserContext);
@@ -14,7 +13,7 @@ const EditUserInfo = () => {
   const [description, setDescription] = useState(userDesc);
   const [tags, setTags] = useState(userTags);
   const [photo, setPhoto] = useState();
-  const [photos, setPhotos] = useState([]);
+  //const [photos] = useState([]);
 
   const onSubmitHandler = async () => {
     try {
@@ -38,7 +37,7 @@ const EditUserInfo = () => {
       userData.user.description = data.description;
 
       ctx.setUserData(userData);
-
+      /*
       if (photo) {
         const form = await new FormData();
         await form.append("avatar", photo);
@@ -69,6 +68,7 @@ const EditUserInfo = () => {
           body: form,
         }).then((data) => data.json());
       }
+      */
     } catch (e) {
       console.error(e);
     }
@@ -128,7 +128,6 @@ const EditUserInfo = () => {
         <h2 className="text-center text-xl w-full mt-4">Change your avatar!</h2>
         <div className="flex justify-center w-full mt-3 md:w-3/5 lg:3/5">
           <Avatar photo={photo} setPhoto={setPhoto} />
-          {console.log(photos)}
         </div>
         <div className=""></div>
         <div className="card-actions justify-center items-center">
