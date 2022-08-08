@@ -16,8 +16,12 @@ const Friends = () => {
   const { token } = userCtx.userData;
 
   useEffect(() => {
-    const { getFriends } = friendsCtx;
-    getFriends(token);
+    const interval = setInterval(() => {
+      const { getFriends } = friendsCtx;
+      getFriends(token);
+      getMessages();
+    }, 1000);
+    return () => clearInterval(interval);
   }, [token]);
 
   useEffect(() => {
@@ -29,10 +33,10 @@ const Friends = () => {
   const { name, email, id } = userCtx.userData.user;
   const submitHandler = async (e) => {
     e.preventDefault();
-    await sendMessage(name, inputValue, id);
-
-    setInputValue("");
-    console.log(messagesBoxRef);
+    if (inputValue !== "") {
+      await sendMessage(name, inputValue, id);
+      setInputValue("");
+    }
   };
 
   useEffect(() => {

@@ -22,7 +22,7 @@ const TagInput = ({ setTags, tagValue, id, tags }) => {
         onChange={(e) => onChangeHandler(e)}
         value={tagInput}
       />
-      <button onClick={buttonHandle}>I Save</button>
+      <button onClick={buttonHandle}>Save</button>
     </div>
   );
 };
