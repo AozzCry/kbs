@@ -6,6 +6,7 @@ import API from "../../env";
 import UserContext from "../../store/UserContext";
 import PostsContext, { POST_ACTIONS } from "../../store/PostsContext";
 import useHttp from "../../hooks/useHttp";
+import Reaction from "./Reaction";
 
 const Post = ({ post, index, userPost }) => {
   const { token } = useContext(UserContext);
@@ -102,6 +103,8 @@ const Post = ({ post, index, userPost }) => {
       <div className="card-body text-left">
         <p className="text-m">{post.body}</p>
       </div>
+      <Reaction reactions={post.reactions} id={post.id} />
+
       {displayComments}
       {token && <AddComment id={post.id} postIndex={index} />}
       {displayComments && (

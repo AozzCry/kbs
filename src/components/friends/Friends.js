@@ -15,14 +15,14 @@ const Friends = () => {
   const messagesBoxRef = useRef(null);
   const { token } = userCtx.userData;
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const { getFriends } = friendsCtx;
-      getFriends(token);
-      getMessages();
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [token]);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     const { getFriends } = friendsCtx;
+  //     getFriends(token);
+  //     getMessages();
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, [token]);
 
   useEffect(() => {
     setIsLoaded(true);
