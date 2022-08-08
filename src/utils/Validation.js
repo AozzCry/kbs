@@ -56,4 +56,12 @@ const Valid = (e) => {
   }
 };
 
+export const validEmail = (value) =>
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}])|(([a-zA-Z\-\d]+\.)+[a-zA-Z]{2,}))$/.test(
+    value
+  );
+
+export const validPassword = (value) =>
+  /^(?=.*[a-z]+)(?=.*[A-Z]+)(?=.*\d+)(?=.{8,})/.test(value);
+
 export default Valid;

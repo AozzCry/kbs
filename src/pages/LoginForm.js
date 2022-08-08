@@ -4,44 +4,63 @@ import Cookies from "universal-cookie";
 
 import loginImg from "../assets/imgs/login.svg";
 import UserContext from "../store/UserContext";
-import API from "../env";
+import useInput from "../hooks/useInput";
+import { validEmail } from "../utils/Validation";
+import useHttp from "../hooks/useHttp";
+
+const cookies = new Cookies();
 
 const LoginForm = () => {
   const ctx = useContext(UserContext);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    value: emailValue,
+    isValid: emailIsValid,
+    hasError: emailHasError,
+    valueChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    reset: emailReset,
+  } = useInput((value) => validEmail(value));
+
+  const {
+    value: passwordValue,
+    isValid: passwordIsValid,
+    hasError: passwordHasError,
+    valueChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    reset: passwordReset,
+  } = useInput((value) => value);
+
+  const { sendRequest: loginRequest } = useHttp();
+
   const [isValid, setIsValid] = useState(false);
+
+  const formIsValid = emailIsValid && passwordIsValid;
 
   const loginFormHandler = async (e) => {
     e.preventDefault();
 
-    const cookies = new Cookies();
-
-    try {
-      const resp = await fetch(`${API}/api/login`, {
+    if (formIsValid) {
+      const response = await loginRequest({
+        url: "/api/login",
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+        body: {
+          email: emailValue,
+          password: passwordValue,
+        },
       });
-      setIsValid(resp.ok);
-      const data = await resp.json();
-      ctx.setUserData(data);
-      await cookies.set("token", data.token, { path: "/" });
 
-      if (!resp.ok) {
-        document.querySelector("#email").classList.add("notValid");
-        document.querySelector("#password").classList.add("notValid");
-      }
-    } catch (e) {
-      console.log(e, e.message);
-      setIsValid(!isValid);
+      if (response) setIsValid(true);
+
+      ctx.setUserData(response);
+      cookies.set("token", response.token, { path: "/" });
+
+      passwordReset();
+      emailReset();
     }
   };
 
@@ -61,8 +80,12 @@ const LoginForm = () => {
                   id="email"
                   type="text"
                   placeholder="email"
-                  className="input input-bordered"
-                  onChange={(e) => setEmail(e.target.value)}
+                  className={`input input-bordered ${
+                    emailHasError ? "notValid" : null
+                  }`}
+                  onChange={emailChangeHandler}
+                  onBlur={emailBlurHandler}
+                  value={emailValue}
                 />
               </div>
               <div className="form-control">
@@ -71,10 +94,14 @@ const LoginForm = () => {
                 </label>
                 <input
                   id="password"
-                  type="password"
+                  type="text"
                   placeholder="password"
-                  className="input input-bordered"
-                  onChange={(e) => setPassword(e.target.value)}
+                  className={`input input-bordered ${
+                    passwordHasError ? "notValid" : null
+                  }`}
+                  onChange={passwordChangeHandler}
+                  onBlur={passwordBlurHandler}
+                  value={passwordValue}
                 />
                 <label className="label">
                   <a
@@ -86,7 +113,11 @@ const LoginForm = () => {
                 </label>
               </div>
               <div className="form-control mt-6">
-                <button type="submit" className="btn btn-primary">
+                <button
+                  disabled={!formIsValid}
+                  type="submit"
+                  className="btn btn-primary"
+                >
                   Login
                 </button>
               </div>
@@ -94,7 +125,7 @@ const LoginForm = () => {
           </div>
         </div>
       </div>
-      {isValid ? <Navigate to="/dashboard" /> : undefined}
+      {isValid ? <Navigate to="/dashboard" /> : null}
     </form>
   );
 };
