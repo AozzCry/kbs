@@ -17,6 +17,7 @@ import Site404 from "./Site404";
 import Friends from "../components/friends/Friends";
 import Users from "../components/users/Users";
 import StrangerInfo from "./StrangerInfo";
+import Messenger from "./Messenger";
 
 import { PostsContextProvider } from "../store/PostsContext";
 import { StrangersContextProvider } from "../store/StrangersContext";
@@ -55,28 +56,29 @@ const Dashboard = () => {
         </div>
       </div>
       <PostsContextProvider>
-        <div className="divider lg:divider-horizontal lg:order-last p-2"></div>
-        <div className="flex flex-col gap-4 lg:order-last">
-          <StrangersContextProvider>
-            <Search />
-            {strangersCtx.strangers && <Users />}
-          </StrangersContextProvider>
-          <hr />
-          fłiends
-          <FriendsContextProvider>
+        <FriendsContextProvider>
+          <div className="divider lg:divider-horizontal lg:order-last p-2"></div>
+          <div className="flex flex-col gap-4 lg:order-last">
+            <StrangersContextProvider>
+              <Search />
+              {strangersCtx.strangers && <Users />}
+            </StrangersContextProvider>
+            <hr />
+            fłiends
             {token && friendsCtx && <Friends />}
-          </FriendsContextProvider>
-        </div>
-        <div className="divider lg:divider-horizontal p-2"></div>
-        <div className="grid grow gap-4 flex-1">
-          <Routes>
-            <Route path="*" element={<Site404 />} />
-            <Route path="/" element={<PostsContainer />} />
-            <Route path="/usersettings" element={<UserCard />} />
-            <Route path="/myposts" element={<UserPosts />} />
-            <Route path="/strangerinfo" element={<StrangerInfo />} />
-          </Routes>
-        </div>
+          </div>
+          <div className="divider lg:divider-horizontal p-2"></div>
+          <div className="grid grow gap-4 flex-1">
+            <Routes>
+              <Route path="*" element={<Site404 />} />
+              <Route path="/" element={<PostsContainer />} />
+              <Route path="/usersettings" element={<UserCard />} />
+              <Route path="/myposts" element={<UserPosts />} />
+              <Route path="/strangerinfo" element={<StrangerInfo />} />
+              <Route path="/messenger" element={<Messenger />} />
+            </Routes>
+          </div>
+        </FriendsContextProvider>
       </PostsContextProvider>
     </DashboardWrapper>
   );

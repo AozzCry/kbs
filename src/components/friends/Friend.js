@@ -1,7 +1,11 @@
 import API from "../../env";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import FriendsContext from "../../store/FriendsContext";
 
 const Friend = ({ friend, userId, userEmail, setConnection }) => {
+  const friendsCtx = useContext(FriendsContext);
+
   let connectionString;
   if (friend.email && userEmail) {
     if (userId > friend.id) {
@@ -18,13 +22,12 @@ const Friend = ({ friend, userId, userEmail, setConnection }) => {
         .replaceAll("@", "")}`;
     }
   }
-
   return (
     <div>
       <Link
-        to="./strangerinfo"
-        onClick={() => setConnection(connectionString)}
-        state={{ stranger: friend }}
+        to="./messenger"
+        state={{ friend: friend }}
+        onClick={() => friendsCtx.setConnection(connectionString)}
         className="flex items-center justify-center space-x-3 bg-base-300 p-2 rounded-box shadow-lg"
       >
         <div className="flex avatar">

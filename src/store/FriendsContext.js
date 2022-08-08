@@ -6,12 +6,16 @@ const FriendsContext = createContext({
   friends: [],
   setFriends: () => {},
   getFriends: () => {},
+  connection: [],
+  setConnection: () => {},
+  getConncetion: () => {},
   friendsIsLoading: null,
   friendsError: null,
 });
 
 export const FriendsContextProvider = (props) => {
   const [friends, setFriends] = useState([]);
+  const [connection, setConnection] = useState([]);
 
   const {
     error: friendsError,
@@ -40,6 +44,8 @@ export const FriendsContextProvider = (props) => {
         friends,
         setFriends,
         getFriends,
+        connection,
+        setConnection,
         friendsError,
         friendsIsLoading,
       }}

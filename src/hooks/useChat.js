@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import FriendsContext from "../store/FriendsContext";
 
 const useChat = () => {
   const [messages, setMessages] = useState([]);
-  const [connection, setConnection] = useState("");
+  const friendsCtx = useContext(FriendsContext);
+  const { connection } = friendsCtx;
 
   const getMessages = async () => {
     const response = await fetch(
@@ -37,7 +39,7 @@ const useChat = () => {
     }
   };
 
-  return [messages, sendMessage, getMessages, connection, setConnection];
+  return [messages, sendMessage, getMessages];
 };
 
 export default useChat;
