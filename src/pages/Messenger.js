@@ -26,7 +26,7 @@ const Friends = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       getMessages();
-    }, 2000);
+    }, 3333);
     return () => clearInterval(interval);
   }, [friendsCtx.connection, getMessages]);
 
@@ -36,7 +36,7 @@ const Friends = () => {
 
   useEffect(() => {
     setIsLoaded(true);
-  });
+  }, []);
 
   const { name, id } = userCtx.userData.user;
   const submitHandler = async (e) => {
