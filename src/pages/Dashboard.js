@@ -22,6 +22,7 @@ import Messenger from "./Messenger";
 import { PostsContextProvider } from "../store/PostsContext";
 import { StrangersContextProvider } from "../store/StrangersContext";
 import { FriendsContextProvider } from "../store/FriendsContext";
+import FollowedPosts from "./FollowedPosts";
 
 const Dashboard = () => {
   const userCtx = useContext(UserContext);
@@ -75,7 +76,6 @@ const Dashboard = () => {
               <Route path="/usersettings" element={<UserCard />} />
               <Route path="/myposts" element={<UserPosts />} />
               <Route path="/strangerinfo" element={<StrangerInfo />} />
-              <Route path="/messenger" element={<Messenger />} />
             </Routes>
           </div>
         </FriendsContextProvider>

@@ -16,6 +16,10 @@ const Friends = () => {
     friendsCtx.getFriends(token);
   }, [token]);
 
+  useEffect(() => {
+    setIsLoaded(true);
+  });
+
   const [userFriends] = [friendsCtx.friends];
 
   const { email, id } = userCtx.userData.user;

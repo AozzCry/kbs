@@ -75,24 +75,24 @@ const EditUserInfo = () => {
   };
 
   return (
-    <div className="card bg-base-300 shadow-lg">
-      <div className="card-body flex items-center justify-center">
+    <div className="card  shadow-lg">
+      <div className="card-body bg-base-300 flex flex-col items-center">
         <h2 className="card-title">Edit your profile!</h2>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Description</span>
+        <div className="form-control w-full max-w-xs w-full">
+          <label className="form-control w-full max-w-xs">
+            <span className="text-center text-xl w-full mt-8 mb-2">
+              Description
+            </span>
           </label>
-          <input
+          <textarea
             type="text"
             placeholder="Change description here"
-            className="input input-bordered"
+            className="input h-32 hover:input-primary"
             onChange={(e) => setDescription(e.target.value)}
             value={description}
           />
-          <label className="label">
-            <span className="label-text">Tags</span>
-          </label>
-          <div>
+          <h2 className="text-center text-xl w-full mt-6">Tags</h2>
+          <div className="flex flex-col gap-4 ml-12 w-full ">
             {tags.map((tag, index) => (
               <TagInput
                 id={index}
@@ -125,9 +125,13 @@ const EditUserInfo = () => {
         {/*    />*/}
         {/*  </div>*/}
         {/*</div>*/}
-        <Avatar photo={photo} setPhoto={setPhoto} />
-        <Album photos={photos} setPhotos={setPhotos} />
-        <div className="card-actions justify-center">
+        <h2 className="text-center text-xl w-full mt-4">Change your avatar!</h2>
+        <div className="flex justify-center w-full mt-3 md:w-3/5 lg:3/5">
+          <Avatar photo={photo} setPhoto={setPhoto} />
+          {console.log(photos)}
+        </div>
+        <div className=""></div>
+        <div className="card-actions justify-center items-center">
           <button className="btn btn-primary mt-4" onClick={onSubmitHandler}>
             Confirm changes
           </button>
