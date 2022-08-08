@@ -23,7 +23,6 @@ import FollowedPosts from "./FollowedPosts";
 import { PostsContextProvider } from "../store/PostsContext";
 import { StrangersContextProvider } from "../store/StrangersContext";
 import { FriendsContextProvider } from "../store/FriendsContext";
-import FollowedPosts from "./FollowedPosts";
 
 const Dashboard = () => {
   const userCtx = useContext(UserContext);
