@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 
 import homeImg2 from "../assets/imgs/home2.svg";
 
-const HomePage = () => {
-  const cookies = new Cookies();
+const cookies = new Cookies();
 
+const HomePage = () => {
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row">
