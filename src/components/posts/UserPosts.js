@@ -11,9 +11,8 @@ const UserPosts = () => {
   const { token } = userCtx;
   const { id } = userCtx.userData.user;
 
-  const postsCtx = useContext(PostsContext);
   const { getUserPosts, userPosts, userPostsError, userPostsLoading } =
-    postsCtx;
+    useContext(PostsContext);
 
   let classes = token
     ? "md:overflow-y-scroll scrollbar-hide md:overflow-hidden"

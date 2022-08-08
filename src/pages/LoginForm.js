@@ -53,7 +53,6 @@ const LoginForm = () => {
           password: passwordValue,
         },
       });
-
       if (response) setIsValid(true);
 
       ctx.setUserData(response);

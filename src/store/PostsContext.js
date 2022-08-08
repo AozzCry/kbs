@@ -13,6 +13,8 @@ const PostsContext = createContext({
   postsError: null,
   userPostsError: null,
   userPostsLoading: null,
+  followedPosts: [],
+  setFollowedPosts: () => {},
 });
 
 export const POST_ACTIONS = {
@@ -49,6 +51,7 @@ const postsReducer = (posts, action) => {
 export const PostsContextProvider = (props) => {
   const [posts, dispatchPosts] = useReducer(postsReducer, []);
   const [userPosts, setUserPosts] = useState([]);
+  const [followedPosts, setFollowedPosts] = useState([]);
 
   const {
     error: postsError,
@@ -83,8 +86,8 @@ export const PostsContextProvider = (props) => {
       const posts = await postsRequest({
         url: `/api/posts/tag/${inputValue}`,
       });
-
-      dispatchPosts({ type: POST_ACTIONS.LOAD_POSTS, payload: { posts } });
+      if (posts)
+        dispatchPosts({ type: POST_ACTIONS.LOAD_POSTS, payload: { posts } });
     },
     [postsRequest]
   );
@@ -103,6 +106,8 @@ export const PostsContextProvider = (props) => {
         dispatchPosts,
         userPostsError,
         userPostsLoading,
+        followedPosts,
+        setFollowedPosts,
       }}
     >
       {props.children}
