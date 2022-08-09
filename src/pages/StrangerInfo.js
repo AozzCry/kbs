@@ -55,7 +55,11 @@ const StrangerInfo = () => {
             </button>
           </div>
         </div>
+
         <p>{email ? email : "Description"}</p>
+
+
+
         <p>{description ? description : "Description"}</p>
         <div className="flex justify-center w-full gap-4">
           {tags && tags.map((tag, index) => <Tag name={tag} key={index} />)}
