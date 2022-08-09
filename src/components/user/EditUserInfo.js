@@ -43,11 +43,11 @@ const EditUserInfo = () => {
         const form = await new FormData();
         await form.append("avatar", photo);
         await fetch(`${API}/api/photos/upload`, {
-          method: "post",
+          method: "PATCH",
           headers: {
-            "Context-type": "multipart/form-data",
+            Authorization: `Bearer ${ctx.userData.token}`,
+            "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: "Bearer 12|bPeswddM0gJhKDleakygQG2Y0FEVdJ1O1HFWSblX",
           },
           body: form,
         }).then((data) => data.json());
